@@ -1,5 +1,7 @@
 package dad.controllers;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,6 +13,16 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class RootController implements Initializable {
+
+    // Model
+    private final ObjectProperty<Tab> selectedTab = new SimpleObjectProperty<>();
+    private final PalabrasController palabrasController = new PalabrasController();
+
+    public PalabrasController getPalabrasController() {
+        return palabrasController;
+    }
+
+    // View
 
     @FXML
     private Tab palabrasTab;
@@ -68,7 +80,16 @@ public class RootController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Binds
+        selectedTab.bind(root.getSelectionModel().selectedItemProperty());
 
+        // Listener para cambiar tabla
+        selectedTab.addListener((obs, oldTab, newTab) -> {
+            if (newTab == palabrasTab) {
+                // Set the root of PalabrasController as the content of palabrasTab
+                palabrasTab.setContent(palabrasController.getRoot());
+            }
+        });
     }
 
 }
