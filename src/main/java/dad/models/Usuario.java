@@ -6,8 +6,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Usuario {
-    private StringProperty nombre = new SimpleStringProperty();
-    private IntegerProperty puntos = new SimpleIntegerProperty();
+    private final StringProperty nombre = new SimpleStringProperty();
+    private final IntegerProperty puntos = new SimpleIntegerProperty();
 
     public String getNombre() {
         return nombre.get();

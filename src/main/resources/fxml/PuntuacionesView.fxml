@@ -34,7 +34,8 @@
       <HBox alignment="CENTER" spacing="5.0">
          <children>
             <TextField fx:id="usuarioTextField" />
-            <Button fx:id="buscarButton" alignment="TOP_RIGHT" mnemonicParsing="false" text="Buscar" />
+            <Button fx:id="buscarButton" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#onBuscarAction" text="Buscar" />
+            <Button fx:id="restartButton" mnemonicParsing="false" onAction="#onRestablecerAction" text="Restablecer" />
          </children>
       </HBox>
    </children>

@@ -17,6 +17,7 @@ public class RootController implements Initializable {
     // Model
     private final PalabrasController palabrasController = new PalabrasController();
     private final PuntuacionesController puntuacionesController = new PuntuacionesController();
+    private final PartidaController partidaController = new PartidaController();
 
     private final ObjectProperty<Tab> selectedTab = new SimpleObjectProperty<>();
 
@@ -43,37 +44,11 @@ public class RootController implements Initializable {
     @FXML
     private TabPane root;
 
-    public Tab getPalabrasTab() {
-        return palabrasTab;
-    }
-
-    public void setPalabrasTab(Tab palabrasTab) {
-        this.palabrasTab = palabrasTab;
-    }
-
-    public Tab getPartidaTab() {
-        return partidaTab;
-    }
-
-    public void setPartidaTab(Tab partidaTab) {
-        this.partidaTab = partidaTab;
-    }
-
-    public Tab getPuntuacionTab() {
-        return puntuacionTab;
-    }
-
-    public void setPuntuacionTab(Tab puntuacionTab) {
-        this.puntuacionTab = puntuacionTab;
-    }
 
     public TabPane getRoot() {
         return root;
     }
 
-    public void setRoot(TabPane root) {
-        this.root = root;
-    }
 
     public RootController() {
         try {
@@ -89,9 +64,13 @@ public class RootController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Binds
         selectedTab.bind(root.getSelectionModel().selectedItemProperty());
+        partidaController.palabrasProperty().bind(palabrasController.palabrasProperty());
 
+        // Tabs
         palabrasTab.setContent(palabrasController.getRoot());
         puntuacionTab.setContent(puntuacionesController.getRoot());
+        partidaTab.setContent(partidaController.getRoot());
+
 
     }
 

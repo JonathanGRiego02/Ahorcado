@@ -10,6 +10,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,16 +27,22 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class PuntuacionesController implements Initializable {
 
     // Model
     private final ListProperty<Usuario> usuarios = new SimpleListProperty<>(FXCollections.observableArrayList());
 
+    private final ListProperty<Usuario> filteredUsuarios = new SimpleListProperty<>(FXCollections.observableArrayList());
+
 
     // View
     @FXML
     private Button buscarButton;
+
+    @FXML
+    private Button restartButton;
 
     @FXML
     private TableColumn<Usuario, String> nombreUsuario;
@@ -59,6 +66,12 @@ public class PuntuacionesController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         CargarUsuarios();
+
+        // Lista de usuarios filtrada
+        usuariosTableView.itemsProperty().bind(filteredUsuarios);
+
+        // Initially, show all users
+        filteredUsuarios.set(usuarios);
 
         // Asociar la lista de usuarios a la TableView
         nombreUsuario.setCellValueFactory(c -> c.getValue().nombreProperty());
@@ -110,6 +123,25 @@ public class PuntuacionesController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void onBuscarAction() {
+        String searchText = usuarioTextField.getText().toLowerCase();
+        if (searchText.isEmpty()) {
+            filteredUsuarios.set(usuarios);
+        } else {
+            List<Usuario> filteredList = usuarios.stream()
+                    .filter(usuario -> usuario.getNombre().toLowerCase().contains(searchText))
+                    .collect(Collectors.toList());
+            filteredUsuarios.set(FXCollections.observableArrayList(filteredList));
+        }
+    }
+
+    @FXML
+    void onRestablecerAction(ActionEvent event) {
+        filteredUsuarios.set(usuarios);
+    }
+
 
     public PuntuacionesController() {
         try {

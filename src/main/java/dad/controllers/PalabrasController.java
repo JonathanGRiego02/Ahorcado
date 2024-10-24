@@ -5,7 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -28,6 +30,10 @@ public class PalabrasController implements Initializable {
     private final ListProperty<String> palabras = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final String FILE_PATH = "JsonFiles/palabras.json";
 
+    public ListProperty<String> palabrasProperty() {
+        return palabras;
+    }
+
     // View
     @FXML
     private ListView<String> palabrasListView;
@@ -41,21 +47,8 @@ public class PalabrasController implements Initializable {
     @FXML
     private Button removeButton;
 
-
-    public ListView<?> getPalabrasListView() {
-        return palabrasListView;
-    }
-
-    public void setPalabrasListView(ListView<String> palabrasListView) {
-        this.palabrasListView = palabrasListView;
-    }
-
     public GridPane getRoot() {
         return root;
-    }
-
-    public void setRoot(GridPane root) {
-        this.root = root;
     }
 
 
