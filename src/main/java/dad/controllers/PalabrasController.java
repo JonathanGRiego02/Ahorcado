@@ -9,9 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
 import java.io.FileNotFoundException;
@@ -21,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class PalabrasController implements Initializable {
@@ -32,9 +31,6 @@ public class PalabrasController implements Initializable {
     // View
     @FXML
     private ListView<String> palabrasListView;
-
-    @FXML
-    private TextField palabrasTextField;
 
     @FXML
     private GridPane root;
@@ -52,14 +48,6 @@ public class PalabrasController implements Initializable {
 
     public void setPalabrasListView(ListView<String> palabrasListView) {
         this.palabrasListView = palabrasListView;
-    }
-
-    public TextField getPalabrasTextField() {
-        return palabrasTextField;
-    }
-
-    public void setPalabrasTextField(TextField palabrasTextField) {
-        this.palabrasTextField = palabrasTextField;
     }
 
     public GridPane getRoot() {
@@ -123,7 +111,6 @@ public class PalabrasController implements Initializable {
         // Guardar el JSON en el archivo
         try {
             Files.writeString(Paths.get(FILE_PATH), json);
-            System.out.println("Palabras guardadas en el archivo " + FILE_PATH);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -133,18 +120,36 @@ public class PalabrasController implements Initializable {
     // Botones
     @FXML
     public void onAddAction() {
-        String palabra = palabrasTextField.getText();
-        palabras.add(palabra);
-        for (String p : palabras) {
-            System.out.println(p);
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("");
+        dialog.setHeaderText("La palabra será añadida al juego");
+        dialog.setContentText("Nueva palabra:");
+
+        Optional<String> result = dialog.showAndWait();
+
+        // Comprobamos si el resultado es presente
+        if (result.isPresent()) {
+            String palabra = result.get();
+            if (palabra != null && !palabra.trim().isEmpty()) {
+                palabras.add(palabra); // Añadir la palabra solo si no es vacía
+            } else {
+                mostrarAdvertencia("Por favor, introduce una palabra válida.");
+            }
         }
-        palabrasTextField.clear();
+    }
+
+    // Método para mostrar un cuadro de diálogo de advertencia
+    private void mostrarAdvertencia(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Advertencia");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     @FXML void onDeleteAction() {
         String palabra = palabrasListView.getSelectionModel().getSelectedItem();
         palabras.remove(palabra);
     }
-
 
 }

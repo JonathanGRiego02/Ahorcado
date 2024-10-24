@@ -21,6 +21,7 @@ public class AhorcadoApp extends Application {
     @Override
     public void stop() throws Exception {
         rootController.getPalabrasController().guardarPalabras();
+        rootController.getPuntuacionesController().GuardarUsuarios();
     }
 
 
