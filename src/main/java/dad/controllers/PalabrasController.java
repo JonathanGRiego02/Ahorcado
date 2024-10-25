@@ -57,6 +57,7 @@ public class PalabrasController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PalabrasView.fxml"));
             loader.setController(this);
             loader.load();
+            root.getStylesheets().add(getClass().getResource("/StyleSheets/palabras.css").toExternalForm());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

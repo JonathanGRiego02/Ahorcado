@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -10,12 +11,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../StyleSheets/partida.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <bottom>
       <HBox alignment="TOP_CENTER" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="adivinarTextField" />
+            <TextField fx:id="adivinarTextField">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></TextField>
             <Button fx:id="letraButton" mnemonicParsing="false" onAction="#onLetraAction" text="Letra" />
             <Button fx:id="resolverButton" mnemonicParsing="false" onAction="#onResolverAction" text="Resolver" />
          </children>
@@ -35,7 +38,7 @@
                   <Image url="@../hangman/9.png" />
                </image>
             </ImageView>
-            <Label fx:id="palabraLabel" text="Label" />
+            <Label fx:id="palabraLabel" />
          </children>
       </VBox>
    </center>
@@ -51,11 +54,26 @@
          <right>
             <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" BorderPane.alignment="CENTER">
                <children>
-                  <Label text="Puntos:" />
+                  <Label fx:id="tituloPuntosLabel" text="Puntos:" />
                   <Label fx:id="numPuntosLabel" alignment="CENTER" contentDisplay="CENTER" text="0" />
                </children>
             </VBox>
          </right>
       </BorderPane>
    </top>
+   <left>
+      <BorderPane BorderPane.alignment="CENTER">
+         <top>
+            <Label text="❤❤❤❤❤❤❤❤❤" BorderPane.alignment="CENTER" />
+         </top>
+         <bottom>
+            <VBox spacing="5.0" stylesheets="@../StyleSheets/partida.css" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="tituloAdivinadasLabel" text="Letras introducidas:" />
+                  <ListView fx:id="adivinadasListView" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="150.0" prefWidth="150.0" VBox.vgrow="NEVER" />
+               </children>
+            </VBox>
+         </bottom>
+      </BorderPane>
+   </left>
 </BorderPane>

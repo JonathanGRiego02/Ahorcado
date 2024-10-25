@@ -1,0 +1,40 @@
+/* puntuaciones.css */
+
+/* Cambiar el color de fondo del GridPane */
+#root {
+    -fx-background-color: #b4c5e4; /* Azul claro */
+}
+
+/* Cambiar el color de fondo de los botones */
+.button {
+    -fx-background-color: #3c3744; /* Verde */
+    -fx-text-fill: white; /* Texto blanco */
+    -fx-font-size: 14px; /* Tamaño de letra aumentado */
+}
+
+/* Cambiar el color de fondo del TextField */
+.text-field {
+    -fx-background-color: #f0f0f0; /* Gris claro */
+    -fx-text-fill: black; /* Texto negro */
+    -fx-font-size: 16px; /* Tamaño de letra aumentado */
+}
+
+/* Cambiar el color y la fuente de los Labels */
+.label {
+    -fx-text-fill: black; /* Rojo */
+    -fx-font-family: "Arial";
+    -fx-font-size: 20px; /* Tamaño de letra aumentado */
+    -fx-font-weight: bold;
+}
+
+/* Cambiar el color de fondo de la TableView */
+.table-view {
+    -fx-background-color: #ffffff; /* Blanco */
+}
+
+/* Cambiar el color de fondo de las columnas de la TableView */
+.table-column {
+    -fx-background-color: #e0e0e0; /* Gris claro */
+    -fx-text-fill: black; /* Texto negro */
+    -fx-font-size: 16px; /* Tamaño de letra aumentado */
+}

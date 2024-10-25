@@ -93,6 +93,7 @@ public class PartidaController implements Initializable {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PartidaView.fxml"));
       loader.setController(this);
       loader.load();
+      root.getStylesheets().add(getClass().getResource("/StyleSheets/partida.css").toExternalForm());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -100,10 +101,32 @@ public class PartidaController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
+    // binds
     palabra.bindBidirectional(palabraLabel.textProperty());
     palabraAdivinar.bind(adivinarTextField.textProperty());
+
+    // listeners
+    palabra.addListener((observable, oldValue, newValue) -> checkWordGuessed(newValue));
   }
 
+  // Listener de haber ganado la partida
+  private void checkWordGuessed(String newValue) {
+    if (newValue.equals(secretWordController.getWord())) {
+      System.out.println("¡La palabra ha sido adivinada correctamente!");
+      clearGameState();
+    }
+  }
+
+    // Limpiar para empezar nueva partida
+    private void clearGameState() {
+      palabra.set("");
+      palabraAdivinar.set("");
+      adivinarTextField.clear();
+      secretWordController = null;
+      ahorcadoImageView.setImage(null); // Clear the image if necessary
+      numPuntosLabel.setText("0"); // Reset points if necessary
+      // Add any other necessary reset logic here
+    }
 
 
-}
+  }

@@ -1,0 +1,12 @@
+/* root.css */
+
+/* Cambiar el color de fondo del TabPane */
+.tab-pane {
+    -fx-background-color: #f0f0f0; /* Gris claro */
+}
+
+/* Cambiar el color de las pestañas del TabPane */
+.tab {
+    -fx-background-color: #5d8edd;
+    -fx-text-fill: white; /* Texto blanco */
+}

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root" hgap="5.0" vgap="5.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="root" hgap="5.0" vgap="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
     <ColumnConstraints hgrow="ALWAYS" />
 
@@ -25,7 +25,7 @@
       <TableView fx:id="usuariosTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" GridPane.rowSpan="3">
         <columns>
           <TableColumn fx:id="nombreUsuario" editable="false" minWidth="100.0" resizable="false" text="Nombre" />
-          <TableColumn fx:id="puntuacionUsuario" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" resizable="false" text="Puntuación" />
+          <TableColumn fx:id="puntuacionUsuario" maxWidth="-1.0" minWidth="150.0" prefWidth="-1.0" resizable="false" text="Puntuación" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

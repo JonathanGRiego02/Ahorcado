@@ -1,0 +1,20 @@
+/* palabras.css */
+
+/* Cambiar el color de fondo del GridPane */
+#root {
+    -fx-background-color: #b4c5e4; /* Azul claro */
+}
+
+/* Cambiar el color de fondo de los botones */
+.button {
+    -fx-background-color: #3c3744; /* Verde */
+    -fx-text-fill: white; /* Texto blanco */
+    -fx-font-size: 14px; /* Tamaño de letra aumentado */
+}
+
+/* Cambiar el color de fondo del ListView */
+.list-view {
+    -fx-background-color: #f0f0f0; /* Gris claro */
+    -fx-text-fill: black; /* Texto negro */
+    -fx-font-size: 16px; /* Tamaño de letra aumentado */
+}

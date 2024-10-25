@@ -148,6 +148,7 @@ public class PuntuacionesController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PuntuacionesView.fxml"));
             loader.setController(this);
             loader.load();
+            root.getStylesheets().add(getClass().getResource("/StyleSheets/puntuaciones.css").toExternalForm());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

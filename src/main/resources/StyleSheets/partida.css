@@ -1,0 +1,42 @@
+/* styles.css */
+
+#root {
+    -fx-background-color: #b4c5e4; /* Azul claro */
+}
+
+
+/* Cambiar el color de fondo de los botones */
+.button {
+    -fx-background-color: #3c3744; /* Verde */
+    -fx-text-fill: white; /* Texto blanco */
+}
+
+/* Cambiar el color de fondo del TextField */
+.text-field {
+    -fx-background-color: #f0f0f0; /* Gris claro */
+    -fx-text-fill: black; /* Texto negro */
+}
+
+/* Cambiar el color y la fuente del palabraLabel */
+#palabraLabel {
+    -fx-text-fill: black; /* Rojo */
+    -fx-font-family: "Courier New";
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+#tituloPuntosLabel {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px; /* Tamaño de letra aumentado */
+}
+
+#numPuntosLabel {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px; /* Tamaño de letra aumentado */
+}
+
+#tituloAdivinadasLabel {
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+

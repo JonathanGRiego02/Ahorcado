@@ -54,6 +54,7 @@ public class RootController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootView.fxml"));
             loader.setController(this);
             loader.load();
+            root.getStylesheets().add(getClass().getResource("/StyleSheets/root.css").toExternalForm());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
