@@ -29,7 +29,6 @@ public class RootController implements Initializable {
         return puntuacionesController;
     }
 
-
     // View
 
     @FXML

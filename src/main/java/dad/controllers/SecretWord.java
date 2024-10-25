@@ -1,4 +1,4 @@
-package dad.models;
+package dad.controllers;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -39,7 +39,7 @@ public class SecretWord {
     return appeareances;
   }
 
-  private void updateHiddenWord() {
+  protected void updateHiddenWord() {
     StringBuilder hidden = new StringBuilder();
     for (int i = 0; i < word.get().length(); i++) {
       if (word.get().charAt(i) == ' ') {

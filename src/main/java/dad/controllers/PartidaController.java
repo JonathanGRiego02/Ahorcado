@@ -1,6 +1,5 @@
 package dad.controllers;
 
-import dad.models.SecretWord;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,6 +18,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static java.lang.Character.toUpperCase;
+
 public class PartidaController implements Initializable {
 
   // Model
@@ -31,6 +32,8 @@ public class PartidaController implements Initializable {
   private SecretWord secretWordController;
 
   private StringProperty palabra = new SimpleStringProperty();
+
+  private StringProperty palabraAdivinar = new SimpleStringProperty();
 
   // View
 
@@ -64,8 +67,12 @@ public class PartidaController implements Initializable {
 
   @FXML
   void onLetraAction(ActionEvent event) {
+    secretWordController.guessLetter(toUpperCase(palabraAdivinar.get().charAt(0)));
+    System.out.println(secretWordController.getHiddenWord());
+    secretWordController.updateHiddenWord();
+    palabra.set(secretWordController.getHiddenWord());
+    System.out.println(secretWordController.getHiddenWord());
     adivinarTextField.clear();
-    
   }
 
   @FXML
@@ -77,7 +84,7 @@ public class PartidaController implements Initializable {
   void onNewGameAction(ActionEvent event) {
     String randomWord = palabras.get((int) (Math.random() * palabras.size()));
     secretWordController = new SecretWord(randomWord);
-    palabraLabel.setText(secretWordController.getHiddenWord());
+    palabra.set(secretWordController.getHiddenWord());
     System.out.println(randomWord);
   }
 
@@ -93,7 +100,8 @@ public class PartidaController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
-    palabra.bind(adivinarTextField.textProperty());
+    palabra.bindBidirectional(palabraLabel.textProperty());
+    palabraAdivinar.bind(adivinarTextField.textProperty());
   }
 
 
