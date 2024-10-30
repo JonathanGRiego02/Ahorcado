@@ -35,6 +35,10 @@
     -fx-font-size: 18px; /* Tamaño de letra aumentado */
 }
 
+#adivinadasListView {
+    -fx-background-color: #b4c5e4
+}
+
 #tituloAdivinadasLabel {
     -fx-font-weight: bold;
     -fx-font-size: 15px;

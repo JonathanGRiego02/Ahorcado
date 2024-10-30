@@ -10,8 +10,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
@@ -44,6 +46,9 @@ public class PartidaController implements Initializable {
   private ImageView ahorcadoImageView;
 
   @FXML
+  private ListView<String> adivinadasListView;
+
+  @FXML
   private Label numPuntosLabel;
 
   @FXML
@@ -59,9 +64,9 @@ public class PartidaController implements Initializable {
   private Button partidaButton;
 
   @FXML
-  private BorderPane root;
+  private AnchorPane root;
 
-  public BorderPane getRoot() {
+  public AnchorPane getRoot() {
     return root;
   }
 
