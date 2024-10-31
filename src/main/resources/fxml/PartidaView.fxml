@@ -11,17 +11,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <AnchorPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="partidaButton" layoutX="14.0" layoutY="24.0" mnemonicParsing="false" onAction="#onNewGameAction" text="Nueva partida" />
-      <VBox alignment="TOP_CENTER" layoutX="446.0" layoutY="19.0" maxHeight="-Infinity" maxWidth="-Infinity">
+      <VBox alignment="TOP_CENTER" layoutX="446.0" layoutY="19.0" maxHeight="-Infinity" maxWidth="-Infinity" AnchorPane.bottomAnchor="395.6" AnchorPane.rightAnchor="14.799999999999997" AnchorPane.topAnchor="19.0">
          <children>
             <Label fx:id="tituloPuntosLabel" text="Puntos:" />
             <Label fx:id="numPuntosLabel" alignment="CENTER" contentDisplay="CENTER" text="0" />
          </children>
       </VBox>
-      <VBox alignment="CENTER" layoutX="213.0" layoutY="116.0" spacing="50.0">
+      <VBox alignment="CENTER" layoutX="213.0" layoutY="116.0" spacing="50.0" AnchorPane.leftAnchor="212.8" AnchorPane.rightAnchor="179.0">
          <children>
             <ImageView fx:id="ahorcadoImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="1.25" scaleY="1.25">
                <image>
@@ -31,15 +30,15 @@
             <Label fx:id="palabraLabel" />
          </children>
       </VBox>
-      <HBox alignment="TOP_CENTER" layoutX="136.0" layoutY="389.0" spacing="5.0">
+      <HBox alignment="TOP_CENTER" layoutX="136.0" layoutY="389.0" spacing="5.0" AnchorPane.bottomAnchor="35.4" AnchorPane.leftAnchor="136.0" AnchorPane.rightAnchor="101.60000000000002">
          <children>
-            <TextField fx:id="adivinarTextField">
+            <TextField fx:id="adivinarTextField" disable="true">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </TextField>
-            <Button fx:id="letraButton" mnemonicParsing="false" onAction="#onLetraAction" text="Letra" />
-            <Button fx:id="resolverButton" mnemonicParsing="false" onAction="#onResolverAction" text="Resolver" />
+            <Button fx:id="letraButton" disable="true" mnemonicParsing="false" onAction="#onLetraAction" text="Letra" />
+            <Button fx:id="resolverButton" disable="true" mnemonicParsing="false" onAction="#onResolverAction" text="Resolver" />
          </children>
       </HBox>
       <VBox layoutX="14.0" layoutY="69.0" spacing="5.0" stylesheets="@../StyleSheets/partida.css">

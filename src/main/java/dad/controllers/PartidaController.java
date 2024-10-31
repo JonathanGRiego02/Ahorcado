@@ -4,14 +4,12 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -31,11 +29,13 @@ public class PartidaController implements Initializable {
     return palabras;
   }
 
+  private final ListProperty<String> guessedLetters = new SimpleListProperty<>(FXCollections.observableArrayList());
+
   private SecretWord secretWordController;
 
-  private StringProperty palabra = new SimpleStringProperty();
+  private final StringProperty palabra = new SimpleStringProperty();
 
-  private StringProperty palabraAdivinar = new SimpleStringProperty();
+  private final StringProperty palabraAdivinar = new SimpleStringProperty();
 
   // View
 
@@ -72,12 +72,29 @@ public class PartidaController implements Initializable {
 
   @FXML
   void onLetraAction(ActionEvent event) {
+    // Comprobamos que la letra introducida sea válida
+    if (palabraAdivinar.get().length() != 1) {
+      WrongLetter();
+      return;
+    }
+    // Ponemos la letra y actualizamos la palabra
     secretWordController.guessLetter(toUpperCase(palabraAdivinar.get().charAt(0)));
     System.out.println(secretWordController.getHiddenWord());
     secretWordController.updateHiddenWord();
+
+    // Ponemos la palabra actualizada en el Label
     palabra.set(secretWordController.getHiddenWord());
     System.out.println(secretWordController.getHiddenWord());
     adivinarTextField.clear();
+    guessedLetters.add(palabraAdivinar.get());
+  }
+
+  private void WrongLetter() {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle("Input inválido");
+    alert.setHeaderText(null);
+    alert.setContentText("Introduce una letra");
+    alert.showAndWait();
   }
 
   @FXML
@@ -87,10 +104,18 @@ public class PartidaController implements Initializable {
 
   @FXML
   void onNewGameAction(ActionEvent event) {
+    // Obtenemos la palabra del array de palabras
     String randomWord = palabras.get((int) (Math.random() * palabras.size()));
     secretWordController = new SecretWord(randomWord);
+
+    // Ponemos la palabra en el controlador que gestiona la palabra secreta
     palabra.set(secretWordController.getHiddenWord());
     System.out.println(randomWord);
+
+    // Habilitamos los botones y textfield para jugar
+    adivinarTextField.setDisable(false);
+    letraButton.setDisable(false);
+    resolverButton.setDisable(false);
   }
 
   public PartidaController() {
@@ -109,6 +134,7 @@ public class PartidaController implements Initializable {
     // binds
     palabra.bindBidirectional(palabraLabel.textProperty());
     palabraAdivinar.bind(adivinarTextField.textProperty());
+    adivinadasListView.itemsProperty().bind(guessedLetters);
 
     // listeners
     palabra.addListener((observable, oldValue, newValue) -> checkWordGuessed(newValue));
@@ -128,9 +154,8 @@ public class PartidaController implements Initializable {
       palabraAdivinar.set("");
       adivinarTextField.clear();
       secretWordController = null;
-      ahorcadoImageView.setImage(null); // Clear the image if necessary
-      numPuntosLabel.setText("0"); // Reset points if necessary
-      // Add any other necessary reset logic here
+      ahorcadoImageView.setImage(null);
+      numPuntosLabel.setText("0");
     }
 
 
