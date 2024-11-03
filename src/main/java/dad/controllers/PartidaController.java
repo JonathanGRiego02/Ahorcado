@@ -81,26 +81,30 @@ public class PartidaController implements Initializable {
     secretWordController.guessLetter(toUpperCase(palabraAdivinar.get().charAt(0)));
     System.out.println(secretWordController.getHiddenWord());
     secretWordController.updateHiddenWord();
-
-    // Ponemos la palabra actualizada en el Label
-    palabra.set(secretWordController.getHiddenWord());
-    System.out.println(secretWordController.getHiddenWord());
-    adivinarTextField.clear();
     guessedLetters.add(palabraAdivinar.get());
+
+    System.out.println(secretWordController.getHiddenWord());
+    palabraAdivinar.set("");
   }
 
-  private void WrongLetter() {
-    Alert alert = new Alert(Alert.AlertType.WARNING);
-    alert.setTitle("Input inválido");
-    alert.setHeaderText(null);
-    alert.setContentText("Introduce una letra");
-    alert.showAndWait();
-  }
 
   @FXML
   void onResolverAction(ActionEvent event) {
+    if (palabraAdivinar.get().isEmpty()) {
+      WrongWord();
+      return;
+    }
 
+    // Comprobamos si la palabra introducida es correcta
+    String palabra_mayusculas = palabraAdivinar.get().toUpperCase();
+    if (palabra_mayusculas.equals(secretWordController.getWord())) {
+      secretWordController.setHiddenWord(palabra_mayusculas);
+    } else {
+      guessedLetters.add(palabraAdivinar.get());
+      palabraAdivinar.set("");
+    }
   }
+
 
   @FXML
   void onNewGameAction(ActionEvent event) {
@@ -108,14 +112,26 @@ public class PartidaController implements Initializable {
     String randomWord = palabras.get((int) (Math.random() * palabras.size()));
     secretWordController = new SecretWord(randomWord);
 
+    // bindeamos el label de la palabra secreta para que se vaya actualizando
+    palabraLabel.textProperty().bind(secretWordController.hiddenWordProperty());
+
+    // Añadimos el listener por si se gana la partida letra a letra
+    secretWordController.hiddenWordProperty().addListener((observable, oldValue, newValue) -> checkWordGuessed(newValue));
+
     // Ponemos la palabra en el controlador que gestiona la palabra secreta
-    palabra.set(secretWordController.getHiddenWord());
-    System.out.println(randomWord);
+    System.out.println(secretWordController.getWord());
 
     // Habilitamos los botones y textfield para jugar
     adivinarTextField.setDisable(false);
     letraButton.setDisable(false);
     resolverButton.setDisable(false);
+  }
+
+  // Listener de haber ganado la partida por si ganas letra a letra
+  private void checkWordGuessed(String newValue) {
+    if (newValue.equals(secretWordController.getWord())) {
+      ganarAlert();
+    }
   }
 
   public PartidaController() {
@@ -132,31 +148,48 @@ public class PartidaController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle rb) {
     // binds
-    palabra.bindBidirectional(palabraLabel.textProperty());
-    palabraAdivinar.bind(adivinarTextField.textProperty());
+    palabraAdivinar.bindBidirectional(adivinarTextField.textProperty());
     adivinadasListView.itemsProperty().bind(guessedLetters);
 
-    // listeners
-    palabra.addListener((observable, oldValue, newValue) -> checkWordGuessed(newValue));
   }
 
-  // Listener de haber ganado la partida
-  private void checkWordGuessed(String newValue) {
-    if (newValue.equals(secretWordController.getWord())) {
-      System.out.println("¡La palabra ha sido adivinada correctamente!");
-      clearGameState();
-    }
-  }
 
     // Limpiar para empezar nueva partida
-    private void clearGameState() {
-      palabra.set("");
-      palabraAdivinar.set("");
-      adivinarTextField.clear();
-      secretWordController = null;
-      ahorcadoImageView.setImage(null);
-      numPuntosLabel.setText("0");
-    }
-
-
+  private void clearGameState() {
+    palabraAdivinar.set("");
+    secretWordController.setWord("");
+    secretWordController.setHiddenWord("");
+    ahorcadoImageView.setImage(null);
+    numPuntosLabel.setText("0");
+    guessedLetters.clear();
+    adivinarTextField.setDisable(true);
+    letraButton.setDisable(true);
+    resolverButton.setDisable(true);
   }
+
+  // Alertas
+  private void ganarAlert() {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("¡Has ganado!");
+    alert.setHeaderText(null);
+    alert.setContentText("¡La palabra ha sido adivinada correctamente!");
+    alert.showAndWait();
+    clearGameState();
+  }
+
+  private void WrongLetter() {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle("Input inválido");
+    alert.setHeaderText(null);
+    alert.setContentText("Introduce una letra");
+    alert.showAndWait();
+  }
+
+  private void WrongWord() {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle("Input inválido");
+    alert.setHeaderText(null);
+    alert.setContentText("Introduce una palabra");
+    alert.showAndWait();
+  }
+}
