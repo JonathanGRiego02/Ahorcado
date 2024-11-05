@@ -1,9 +1,6 @@
 package dad.controllers;
 
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -12,14 +9,20 @@ public class SecretWord {
   private final ListProperty<String> guessedLetters = new SimpleListProperty<>(FXCollections.observableArrayList());
   private final StringProperty word = new SimpleStringProperty();
   private final StringProperty hiddenWord = new SimpleStringProperty();
+  private IntegerProperty vidas = new SimpleIntegerProperty(9);
 
-  public SecretWord(String word) {
+  public void StartGame(String word) {
     this.word.set(word.toUpperCase());
     StringBuilder hidden = new StringBuilder();
     for (int i = 0; i < word.length(); i++) {
       hidden.append((word.charAt(i) == ' ') ? " " : "_");
     }
     this.hiddenWord.set(hidden.toString());
+  }
+
+  public SecretWord() {
+    this.word.set("");
+    this.hiddenWord.set("...");
   }
 
   public int guessLetter(String letter) {
@@ -33,11 +36,11 @@ public class SecretWord {
         appeareances += 1;
       }
     }
-    if (appeareances > 0) {
-      guessedLetters.add(letter);
+    if (appeareances == 0) {
+      vidas.set(vidas.get() - 1);
     }
+    guessedLetters.add(letter);
     updateHiddenWord();
-    System.out.println(appeareances);
     return appeareances;
   }
 
@@ -97,5 +100,17 @@ public class SecretWord {
   public void addGuessedWord(String word) {
     guessedLetters.add(word);
     updateHiddenWord();
+  }
+
+  public int getVidas() {
+    return vidas.get();
+  }
+
+  public IntegerProperty vidasProperty() {
+    return vidas;
+  }
+
+  public void setVidas(int vidas) {
+    this.vidas.set(vidas);
   }
 }

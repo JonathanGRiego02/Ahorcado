@@ -27,8 +27,7 @@ public class PartidaController implements Initializable {
   public ListProperty<String> palabrasProperty() {
     return palabras;
   }
-  private final ListProperty<String> guessedLetters = new SimpleListProperty<>(FXCollections.observableArrayList());
-  private SecretWord secretWordController;
+  private SecretWord secretWordController = new SecretWord();
   private final StringProperty palabraAdivinar = new SimpleStringProperty();
 
   // View
@@ -60,6 +59,9 @@ public class PartidaController implements Initializable {
   @FXML
   private AnchorPane root;
 
+  @FXML
+  private Label vidasLabel;
+
   public AnchorPane getRoot() {
     return root;
   }
@@ -72,7 +74,6 @@ public class PartidaController implements Initializable {
       return;
     }
     // Ponemos la letra y actualizamos la palabra
-    guessedLetters.add(palabraAdivinar.get());
     System.out.println(secretWordController.getHiddenWord());
     secretWordController.guessLetter(palabraAdivinar.get().toUpperCase());
     palabraAdivinar.set("");
@@ -91,7 +92,6 @@ public class PartidaController implements Initializable {
     if (palabra_mayusculas.equals(secretWordController.getWord())) {
       secretWordController.setHiddenWord(palabra_mayusculas);
     } else {
-      guessedLetters.add(palabraAdivinar.get());
       palabraAdivinar.set("");
     }
   }
@@ -101,17 +101,7 @@ public class PartidaController implements Initializable {
   void onNewGameAction(ActionEvent event) {
     // Obtenemos la palabra del array de palabras
     String randomWord = palabras.get((int) (Math.random() * palabras.size()));
-    secretWordController = new SecretWord(randomWord);
-
-    // bindeamos el label de la palabra secreta para que se vaya actualizando
-    palabraLabel.textProperty().bind(secretWordController.hiddenWordProperty());
-
-    // Bindeamos el ListView de letras adivinadas
-    adivinadasListView.itemsProperty().bind(secretWordController.guessedLettersProperty());
-
-    // Añadimos el listener por si se gana la partida letra a letra
-    secretWordController.hiddenWordProperty().addListener((observable, oldValue, newValue) -> checkWordGuessed(newValue));
-
+    secretWordController.StartGame(randomWord);
     // Ponemos la palabra en el controlador que gestiona la palabra secreta
     System.out.println(secretWordController.getWord());
 
@@ -144,6 +134,11 @@ public class PartidaController implements Initializable {
   public void initialize(URL url, ResourceBundle rb) {
     // binds
     palabraAdivinar.bindBidirectional(adivinarTextField.textProperty());
+    // Binds
+    palabraLabel.textProperty().bind(secretWordController.hiddenWordProperty());
+    adivinadasListView.itemsProperty().bind(secretWordController.guessedLettersProperty());
+    secretWordController.hiddenWordProperty().addListener((observable, oldValue, newValue) -> checkWordGuessed(newValue));
+    vidasLabel.textProperty().bind(secretWordController.vidasProperty().asString());
   }
 
 
@@ -154,7 +149,7 @@ public class PartidaController implements Initializable {
     secretWordController.setHiddenWord("");
     ahorcadoImageView.setImage(null);
     numPuntosLabel.setText("0");
-    guessedLetters.clear();
+    secretWordController.getGuessedLetters().clear();
     adivinarTextField.setDisable(true);
     letraButton.setDisable(true);
     resolverButton.setDisable(true);

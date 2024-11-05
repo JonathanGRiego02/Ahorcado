@@ -44,3 +44,8 @@
     -fx-font-size: 15px;
 }
 
+#vidasLabel {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
