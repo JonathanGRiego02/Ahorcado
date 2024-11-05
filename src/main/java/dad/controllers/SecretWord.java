@@ -5,10 +5,11 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class SecretWord {
 
-  private final ListProperty<Character> guessedLetters = new SimpleListProperty<>(FXCollections.observableArrayList());
+  private final ListProperty<String> guessedLetters = new SimpleListProperty<>(FXCollections.observableArrayList());
   private final StringProperty word = new SimpleStringProperty();
   private final StringProperty hiddenWord = new SimpleStringProperty();
 
@@ -21,14 +22,14 @@ public class SecretWord {
     this.hiddenWord.set(hidden.toString());
   }
 
-  public int guessLetter(char letter) {
+  public int guessLetter(String letter) {
     // ya se acertó esta letra
     if (guessedLetters.contains(letter)) {
       return 0;
     }
     int appeareances = 0;
     for (int i = 0; i < word.get().length(); i++) {
-      if (word.get().charAt(i) == letter) {
+      if (word.get().charAt(i) == letter.charAt(0)) {
         appeareances += 1;
       }
     }
@@ -36,16 +37,18 @@ public class SecretWord {
       guessedLetters.add(letter);
     }
     updateHiddenWord();
+    System.out.println(appeareances);
     return appeareances;
   }
 
   protected void updateHiddenWord() {
     StringBuilder hidden = new StringBuilder();
     for (int i = 0; i < word.get().length(); i++) {
-      if (word.get().charAt(i) == ' ') {
+      char currentChar = word.get().charAt(i);
+      if (currentChar == ' ') {
         hidden.append(" ");
-      } else if (guessedLetters.contains(word.get().charAt(i))) {
-        hidden.append(word.get().charAt(i));
+      } else if (guessedLetters.contains(String.valueOf(currentChar))) {
+        hidden.append(currentChar);
       } else {
         hidden.append("_");
       }
@@ -77,5 +80,22 @@ public class SecretWord {
 
   public void setHiddenWord(String hiddenWord) {
     this.hiddenWord.set(hiddenWord);
+  }
+
+  public ObservableList<String> getGuessedLetters() {
+    return guessedLetters.get();
+  }
+
+  public ListProperty<String> guessedLettersProperty() {
+    return guessedLetters;
+  }
+
+  public void setGuessedLetters(ObservableList<String> guessedLetters) {
+    this.guessedLetters.set(guessedLetters);
+  }
+
+  public void addGuessedWord(String word) {
+    guessedLetters.add(word);
+    updateHiddenWord();
   }
 }

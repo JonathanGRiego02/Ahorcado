@@ -74,7 +74,7 @@ public class PartidaController implements Initializable {
     // Ponemos la letra y actualizamos la palabra
     guessedLetters.add(palabraAdivinar.get());
     System.out.println(secretWordController.getHiddenWord());
-    secretWordController.guessLetter(toUpperCase(palabraAdivinar.get().charAt(0)));
+    secretWordController.guessLetter(palabraAdivinar.get().toUpperCase());
     palabraAdivinar.set("");
   }
 
@@ -105,6 +105,9 @@ public class PartidaController implements Initializable {
 
     // bindeamos el label de la palabra secreta para que se vaya actualizando
     palabraLabel.textProperty().bind(secretWordController.hiddenWordProperty());
+
+    // Bindeamos el ListView de letras adivinadas
+    adivinadasListView.itemsProperty().bind(secretWordController.guessedLettersProperty());
 
     // Añadimos el listener por si se gana la partida letra a letra
     secretWordController.hiddenWordProperty().addListener((observable, oldValue, newValue) -> checkWordGuessed(newValue));
@@ -141,8 +144,6 @@ public class PartidaController implements Initializable {
   public void initialize(URL url, ResourceBundle rb) {
     // binds
     palabraAdivinar.bindBidirectional(adivinarTextField.textProperty());
-    adivinadasListView.itemsProperty().bind(guessedLetters);
-
   }
 
 
