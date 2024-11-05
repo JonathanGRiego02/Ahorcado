@@ -1,5 +1,9 @@
 [
   {
+    "nombre": "Prueba",
+    "puntos": 100
+  },
+  {
     "nombre": "Jonathan",
     "puntos": 92
   },

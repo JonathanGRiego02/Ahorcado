@@ -105,7 +105,7 @@ public class PuntuacionesController implements Initializable {
     }
 
     public void GuardarUsuarios() {
-        // Crear un Gson con los adaptadores personalizados
+        // Crear un Gson con los adaptadores personalizados para el objeto Usuario
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(StringProperty.class, new StringPropertyAdapter())
                 .registerTypeAdapter(IntegerProperty.class, new IntegerPropertyAdapter())

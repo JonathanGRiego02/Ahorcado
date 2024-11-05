@@ -24,17 +24,11 @@ public class PartidaController implements Initializable {
 
   // Model
   private final ListProperty<String> palabras = new SimpleListProperty<>();
-
   public ListProperty<String> palabrasProperty() {
     return palabras;
   }
-
   private final ListProperty<String> guessedLetters = new SimpleListProperty<>(FXCollections.observableArrayList());
-
   private SecretWord secretWordController;
-
-  private final StringProperty palabra = new SimpleStringProperty();
-
   private final StringProperty palabraAdivinar = new SimpleStringProperty();
 
   // View
@@ -78,12 +72,9 @@ public class PartidaController implements Initializable {
       return;
     }
     // Ponemos la letra y actualizamos la palabra
-    secretWordController.guessLetter(toUpperCase(palabraAdivinar.get().charAt(0)));
-    System.out.println(secretWordController.getHiddenWord());
-    secretWordController.updateHiddenWord();
     guessedLetters.add(palabraAdivinar.get());
-
     System.out.println(secretWordController.getHiddenWord());
+    secretWordController.guessLetter(toUpperCase(palabraAdivinar.get().charAt(0)));
     palabraAdivinar.set("");
   }
 
@@ -130,6 +121,7 @@ public class PartidaController implements Initializable {
   // Listener de haber ganado la partida por si ganas letra a letra
   private void checkWordGuessed(String newValue) {
     if (newValue.equals(secretWordController.getWord())) {
+      secretWordController.setHiddenWord("");
       ganarAlert();
     }
   }
