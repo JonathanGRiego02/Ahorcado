@@ -25,7 +25,7 @@ public class PartidaController implements Initializable {
   public ListProperty<String> palabrasProperty() {
     return palabras;
   }
-  private SecretWord secretWordController = new SecretWord();
+  private final SecretWord secretWord = new SecretWord();
   private final StringProperty palabraAdivinar = new SimpleStringProperty();
 
   // View
@@ -70,8 +70,8 @@ public class PartidaController implements Initializable {
       InvalidLetter();
       return;
     }
-    System.out.println(secretWordController.getHiddenWord());
-    secretWordController.guessLetter(palabraAdivinar.get().toUpperCase());
+    System.out.println(secretWord.getHiddenWord());
+    secretWord.guessLetter(palabraAdivinar.get().toUpperCase());
     palabraAdivinar.set("");
   }
 
@@ -83,11 +83,11 @@ public class PartidaController implements Initializable {
     }
 
     String palabra_mayusculas = palabraAdivinar.get().toUpperCase();
-    if (palabra_mayusculas.equals(secretWordController.getWord())) {
-      secretWordController.setHiddenWord(palabra_mayusculas);
+    if (palabra_mayusculas.equals(secretWord.getWord())) {
+      secretWord.setHiddenWord(palabra_mayusculas);
     } else {
       palabraAdivinar.set("");
-      secretWordController.setVidas(secretWordController.getVidas() - 1);
+      secretWord.setVidas(secretWord.getVidas() - 1);
     }
   }
 
@@ -95,20 +95,23 @@ public class PartidaController implements Initializable {
   void onNewGameAction(ActionEvent event) {
     // Metemos la palabra aleatoria de la pool del array
     String randomWord = palabras.get((int) (Math.random() * palabras.size()));
-    secretWordController.StartGame(randomWord);
-    System.out.println(secretWordController.getWord());
+    secretWord.StartGame(randomWord);
+    System.out.println(secretWord.getWord());
     // Colocamos las vidas
     vidasLabel.setVisible(true);
     vidasLabel.setText("❤❤❤❤❤❤❤❤❤");
     //Activamos para probar palabras y letras
+    secretWord.getGuessedLetters().clear();
     adivinarTextField.setDisable(false);
+    adivinarTextField.setVisible(true);
     letraButton.setDisable(false);
     resolverButton.setDisable(false);
+    palabraLabel.setVisible(true);
   }
 
   private void checkWordGuessed(String newValue) {
-    if (newValue.equals(secretWordController.getWord())) {
-      secretWordController.setHiddenWord("");
+    if (newValue.equals(secretWord.getWord())) {
+      secretWord.setHiddenWord("");
       ganarAlert();
     }
   }
@@ -128,17 +131,17 @@ public class PartidaController implements Initializable {
   public void initialize(URL url, ResourceBundle rb) {
     // Bindeos
     palabraAdivinar.bindBidirectional(adivinarTextField.textProperty());
-    palabraLabel.textProperty().bind(secretWordController.hiddenWordProperty());
-    adivinadasListView.itemsProperty().bind(secretWordController.guessedLettersProperty());
+    palabraLabel.textProperty().bind(secretWord.hiddenWordProperty());
+    adivinadasListView.itemsProperty().bind(secretWord.guessedLettersProperty());
     // Listener
-    secretWordController.hiddenWordProperty().addListener((observable, oldValue, newValue) -> checkWordGuessed(newValue));
-    secretWordController.vidasProperty().addListener((observable, oldValue, newValue) -> updateVidasLabel(newValue.intValue()));
+    secretWord.hiddenWordProperty().addListener((observable, oldValue, newValue) -> checkWordGuessed(newValue));
+    secretWord.vidasProperty().addListener((observable, oldValue, newValue) -> updateVidasLabel(newValue.intValue()));
     vidasLabel.setVisible(false);
   }
 
   private void updateVidasLabel(int vidas) {
     String hearts = "❤".repeat(Math.max(0, vidas));
-    if (secretWordController.getVidas() == 0) {
+    if (secretWord.getVidas() == 0) {
       PerderPartida();
     }
     vidasLabel.setText(hearts);
@@ -148,21 +151,22 @@ public class PartidaController implements Initializable {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("¡Has perdido!");
     alert.setHeaderText(null);
-    alert.setContentText("¡Has perdido todas tus vidas! \nLa palabra era: " + secretWordController.getWord());
+    alert.setContentText("¡Has perdido todas tus vidas! \nLa palabra era: " + secretWord.getWord());
     alert.showAndWait();
     clearGameState();
   }
 
   private void clearGameState() {
     palabraAdivinar.set("");
-    secretWordController.setWord(" ");
-    secretWordController.setHiddenWord("...");
+    secretWord.setWord(".");
+    secretWord.setHiddenWord("...");
     ahorcadoImageView.setImage(null);
     numPuntosLabel.setText("0");
-    secretWordController.getGuessedLetters().clear();
-    adivinarTextField.setDisable(true);
+    adivinarTextField.setVisible(false);
+    palabraLabel.setVisible(false);
     letraButton.setDisable(true);
     resolverButton.setDisable(true);
+    secretWord.setVidas(9);
   }
 
   private void ganarAlert() {
