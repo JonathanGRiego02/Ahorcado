@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
@@ -27,6 +28,8 @@ public class PartidaController implements Initializable {
   }
   private final SecretWord secretWord = new SecretWord();
   private final StringProperty palabraAdivinar = new SimpleStringProperty();
+  private Image ahorcadoImage = new Image(getClass().getResource("/hangman/1.png").toExternalForm());
+  private int imageCounter = 1;
 
   // View
 
@@ -97,16 +100,22 @@ public class PartidaController implements Initializable {
     String randomWord = palabras.get((int) (Math.random() * palabras.size()));
     secretWord.StartGame(randomWord);
     System.out.println(secretWord.getWord());
+    SetVisual();
+  }
+
+  private void SetVisual() {
+    ahorcadoImage = new Image(getClass().getResource("/hangman/1.png").toExternalForm());
+    ahorcadoImageView.setImage(ahorcadoImage);
     // Colocamos las vidas
     vidasLabel.setVisible(true);
     vidasLabel.setText("❤❤❤❤❤❤❤❤❤");
     //Activamos para probar palabras y letras
     secretWord.getGuessedLetters().clear();
     adivinarTextField.setDisable(false);
-    adivinarTextField.setVisible(true);
     letraButton.setDisable(false);
     resolverButton.setDisable(false);
     palabraLabel.setVisible(true);
+    adivinadasListView.setVisible(true);
   }
 
   private void checkWordGuessed(String newValue) {
@@ -129,6 +138,7 @@ public class PartidaController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
+    ahorcadoImageView.setImage(ahorcadoImage);
     // Bindeos
     palabraAdivinar.bindBidirectional(adivinarTextField.textProperty());
     palabraLabel.textProperty().bind(secretWord.hiddenWordProperty());
@@ -140,7 +150,10 @@ public class PartidaController implements Initializable {
   }
 
   private void updateVidasLabel(int vidas) {
+    imageCounter++;
     String hearts = "❤".repeat(Math.max(0, vidas));
+    ahorcadoImage = new Image(getClass().getResource("/hangman/" + imageCounter + ".png").toExternalForm());
+    ahorcadoImageView.setImage(ahorcadoImage);
     if (secretWord.getVidas() == 0) {
       PerderPartida();
     }
@@ -157,16 +170,20 @@ public class PartidaController implements Initializable {
   }
 
   private void clearGameState() {
-    palabraAdivinar.set("");
+    ahorcadoImage = new Image(getClass().getResource("/hangman/4.png").toExternalForm());
+    ahorcadoImageView.setImage(ahorcadoImage);
+    palabraAdivinar.set(".");
     secretWord.setWord(".");
     secretWord.setHiddenWord("...");
     ahorcadoImageView.setImage(null);
     numPuntosLabel.setText("0");
-    adivinarTextField.setVisible(false);
     palabraLabel.setVisible(false);
+    adivinarTextField.setDisable(true);
     letraButton.setDisable(true);
     resolverButton.setDisable(true);
+    imageCounter = 1;
     secretWord.setVidas(9);
+    adivinadasListView.setVisible(false);
   }
 
   private void ganarAlert() {

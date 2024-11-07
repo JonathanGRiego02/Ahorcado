@@ -9,7 +9,7 @@ public class SecretWord {
   private final ListProperty<String> guessedLetters = new SimpleListProperty<>(FXCollections.observableArrayList());
   private final StringProperty word = new SimpleStringProperty();
   private final StringProperty hiddenWord = new SimpleStringProperty();
-  private IntegerProperty vidas = new SimpleIntegerProperty(9);
+  private IntegerProperty vidas = new SimpleIntegerProperty(8);
 
   public void StartGame(String word) {
     this.word.set(word.toUpperCase());
