@@ -65,7 +65,7 @@ public class RootController implements Initializable {
         // Binds
         selectedTab.bind(root.getSelectionModel().selectedItemProperty());
         partidaController.palabrasProperty().bind(palabrasController.palabrasProperty());
-        partidaController.usuariosProperty().bind(puntuacionesController.usuariosProperty());
+        partidaController.usuariosProperty().bindBidirectional(puntuacionesController.usuariosProperty());
 
         // Tabs
         palabrasTab.setContent(palabrasController.getRoot());

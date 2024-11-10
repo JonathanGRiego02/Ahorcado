@@ -9,7 +9,8 @@ public class SecretWord {
   private final ListProperty<String> guessedLetters = new SimpleListProperty<>(FXCollections.observableArrayList());
   private final StringProperty word = new SimpleStringProperty();
   private final StringProperty hiddenWord = new SimpleStringProperty();
-  private IntegerProperty vidas = new SimpleIntegerProperty(8);
+  private final IntegerProperty vidas = new SimpleIntegerProperty(8);
+  private final IntegerProperty puntos = new SimpleIntegerProperty(0);
 
   public void StartGame(String word) {
     this.word.set(word.toUpperCase());
@@ -38,6 +39,8 @@ public class SecretWord {
     }
     if (appeareances == 0) {
       vidas.set(vidas.get() - 1);
+    } else {
+      puntos.set(puntos.get() + (appeareances * 10));
     }
     guessedLetters.add(letter);
     updateHiddenWord();
@@ -111,5 +114,17 @@ public class SecretWord {
 
   public void setVidas(int vidas) {
     this.vidas.set(vidas);
+  }
+
+  public IntegerProperty puntosProperty() {
+    return puntos;
+  }
+
+  public int getPuntos() {
+    return puntos.get();
+  }
+
+  public void setPuntos(int puntos) {
+    this.puntos.set(puntos);
   }
 }

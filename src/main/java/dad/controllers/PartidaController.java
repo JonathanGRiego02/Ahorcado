@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -37,7 +38,6 @@ public class PartidaController implements Initializable {
   private final StringProperty palabraAdivinar = new SimpleStringProperty();
   private Image ahorcadoImage = new Image(getClass().getResource("/hangman/1.png").toExternalForm());
   private int imageCounter = 1;
-  private final IntegerProperty puntos = new SimpleIntegerProperty();
 
   // View
 
@@ -81,7 +81,6 @@ public class PartidaController implements Initializable {
       InvalidLetter();
       return;
     }
-    System.out.println(secretWord.getHiddenWord());
     secretWord.guessLetter(palabraAdivinar.get().toUpperCase());
     palabraAdivinar.set("");
   }
@@ -95,6 +94,13 @@ public class PartidaController implements Initializable {
 
     String palabra_mayusculas = palabraAdivinar.get().toUpperCase();
     if (palabra_mayusculas.equals(secretWord.getWord())) {
+      // Calcular las letras sin adivinar
+      int letrasSinAdivinar = (int) secretWord.getHiddenWord().chars().filter(ch -> ch == '_').count();
+
+      // Sumar puntos por cada letra sin adivinar
+      secretWord.setPuntos(secretWord.getPuntos() + (letrasSinAdivinar * 10));
+
+      // Actualizar la palabra oculta a la palabra completa
       secretWord.setHiddenWord(palabra_mayusculas);
     } else {
       palabraAdivinar.set("");
@@ -107,7 +113,6 @@ public class PartidaController implements Initializable {
     // Metemos la palabra aleatoria de la pool del array
     String randomWord = palabras.get((int) (Math.random() * palabras.size()));
     secretWord.StartGame(randomWord);
-    System.out.println(secretWord.getWord());
     SetVisual();
   }
 
@@ -128,7 +133,6 @@ public class PartidaController implements Initializable {
 
   private void checkWordGuessed(String newValue) {
     if (newValue.equals(secretWord.getWord())) {
-      secretWord.setHiddenWord("");
       ganarAlert();
     }
   }
@@ -151,6 +155,8 @@ public class PartidaController implements Initializable {
     palabraAdivinar.bindBidirectional(adivinarTextField.textProperty());
     palabraLabel.textProperty().bind(secretWord.hiddenWordProperty());
     adivinadasListView.itemsProperty().bind(secretWord.guessedLettersProperty());
+    numPuntosLabel.textProperty().bind(secretWord.puntosProperty().asString());
+
     // Listener
     secretWord.hiddenWordProperty().addListener((observable, oldValue, newValue) -> checkWordGuessed(newValue));
     secretWord.vidasProperty().addListener((observable, oldValue, newValue) -> updateVidasLabel(newValue.intValue()));
@@ -158,7 +164,6 @@ public class PartidaController implements Initializable {
   }
 
   private void updateVidasLabel(int vidas) {
-    System.out.println("Me están llamando");
     imageCounter++;
     String hearts = "❤".repeat(Math.max(0, vidas));
     ahorcadoImage = new Image(getClass().getResource("/hangman/" + imageCounter + ".png").toExternalForm());
@@ -173,10 +178,10 @@ public class PartidaController implements Initializable {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("¡Has perdido!");
     alert.setHeaderText(null);
-    alert.setContentText("¡Has perdido todas tus vidas! \nLa palabra era: " + secretWord.getWord());
+    alert.setContentText("¡Has perdido todas tus vidas! \nLa palabra era: " + secretWord.getWord() + "\n" +
+            "Puntuación: " + secretWord.getPuntos() + " puntos.");
     alert.showAndWait();
-    clearGameState();
-    alert.setOnHidden(event -> SaveScore());
+    SaveScore();
   }
 
 
@@ -185,29 +190,68 @@ public class PartidaController implements Initializable {
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setTitle("¡Has ganado!");
     alert.setHeaderText(null);
-    alert.setContentText("¡La palabra ha sido adivinada correctamente!");
+    secretWord.setPuntos(secretWord.getPuntos() + 50);
+    alert.setContentText("¡La palabra ha sido adivinada correctamente! \n" +
+            "Puntuación: " + secretWord.getPuntos() + " puntos.");
     alert.showAndWait();
-    clearGameState();
-    alert.setOnHidden(event -> SaveScore());
+    SaveScore();
   }
 
   private void SaveScore() {
-    TextInputDialog dialog = new TextInputDialog();
+    // Create a custom dialog
+    Dialog<String> dialog = new Dialog<>();
     dialog.setTitle("Guardar puntuación");
-    dialog.setHeaderText(null);
-    dialog.setContentText("Introduce tu nombre:");
+    dialog.setHeaderText("Introduce tu nombre:");
+
+    // Set the button types
+    ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+    dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+    // Create the username field
+    TextField nameField = new TextField();
+    nameField.setPromptText("Nombre");
+
+    // Create a layout for the dialog content
+    VBox content = new VBox();
+    content.setSpacing(10);
+    content.getChildren().add(nameField);
+
+    // Set the content of the dialog
+    dialog.getDialogPane().setContent(content);
+
+    // Convert the result to a username when the OK button is clicked
+    dialog.setResultConverter(dialogButton -> {
+      if (dialogButton == okButtonType) {
+        return nameField.getText();
+      }
+      return null;
+    });
+
     Optional<String> result = dialog.showAndWait();
-    // Creamos el usuario y lo guardamos en la list
-    result.ifPresent(name -> usuarios.add(new Usuario(name, puntos.get())));
+    result.ifPresent(name -> {
+      if (!name.trim().isEmpty()) {
+        usuarios.add(new Usuario(name, secretWord.getPuntos()));
+      } else {
+        // Show a warning if the name is empty
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Nombre inválido");
+        alert.setHeaderText(null);
+        alert.setContentText("El nombre no puede estar vacío.");
+        alert.showAndWait();
+      }
+    });
+    clearGameState();
   }
 
 
+
+
   private void clearGameState() {
-    palabraAdivinar.set(".");
+    palabraAdivinar.set("");
     secretWord.setWord(".");
     secretWord.setHiddenWord("...");
     ahorcadoImageView.setImage(null);
-    numPuntosLabel.setText("0");
+    secretWord.setPuntos(0);
     palabraLabel.setVisible(false);
     adivinarTextField.setDisable(true);
     letraButton.setDisable(true);
@@ -216,8 +260,6 @@ public class PartidaController implements Initializable {
     secretWord.setVidas(8);
     adivinadasListView.setVisible(false);
   }
-
-
 
   private void InvalidLetter() {
     Alert alert = new Alert(Alert.AlertType.WARNING);
