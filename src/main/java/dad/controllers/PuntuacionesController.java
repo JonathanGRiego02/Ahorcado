@@ -36,7 +36,9 @@ public class PuntuacionesController implements Initializable {
 
     private final ListProperty<Usuario> filteredUsuarios = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-
+    public ListProperty<Usuario> usuariosProperty() {
+        return usuarios;
+    }
     // View
     @FXML
     private Button buscarButton;

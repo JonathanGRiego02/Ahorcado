@@ -25,10 +25,10 @@ public class SecretWord {
     this.hiddenWord.set("...");
   }
 
-  public int guessLetter(String letter) {
+  public void guessLetter(String letter) {
     // ya se acertó esta letra
     if (guessedLetters.contains(letter)) {
-      return 0;
+      return;
     }
     int appeareances = 0;
     for (int i = 0; i < word.get().length(); i++) {
@@ -41,7 +41,6 @@ public class SecretWord {
     }
     guessedLetters.add(letter);
     updateHiddenWord();
-    return appeareances;
   }
 
   protected void updateHiddenWord() {

@@ -9,6 +9,11 @@ public class Usuario {
     private final StringProperty nombre = new SimpleStringProperty();
     private final IntegerProperty puntos = new SimpleIntegerProperty();
 
+    public Usuario(String nombre, int puntos) {
+        this.nombre.set(nombre);
+        this.puntos.set(puntos);
+    }
+
     public String getNombre() {
         return nombre.get();
     }

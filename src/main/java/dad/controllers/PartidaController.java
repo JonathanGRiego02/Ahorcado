@@ -1,9 +1,8 @@
 package dad.controllers;
 
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import dad.models.Usuario;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static java.lang.Character.toUpperCase;
@@ -23,13 +23,21 @@ public class PartidaController implements Initializable {
 
   // Model
   private final ListProperty<String> palabras = new SimpleListProperty<>();
+  private final ListProperty<Usuario> usuarios = new SimpleListProperty<>(FXCollections.observableArrayList());
+
   public ListProperty<String> palabrasProperty() {
     return palabras;
   }
+
+  public ListProperty<Usuario> usuariosProperty() {
+    return usuarios;
+  }
+
   private final SecretWord secretWord = new SecretWord();
   private final StringProperty palabraAdivinar = new SimpleStringProperty();
   private Image ahorcadoImage = new Image(getClass().getResource("/hangman/1.png").toExternalForm());
   private int imageCounter = 1;
+  private final IntegerProperty puntos = new SimpleIntegerProperty();
 
   // View
 
@@ -150,6 +158,7 @@ public class PartidaController implements Initializable {
   }
 
   private void updateVidasLabel(int vidas) {
+    System.out.println("Me están llamando");
     imageCounter++;
     String hearts = "❤".repeat(Math.max(0, vidas));
     ahorcadoImage = new Image(getClass().getResource("/hangman/" + imageCounter + ".png").toExternalForm());
@@ -167,11 +176,33 @@ public class PartidaController implements Initializable {
     alert.setContentText("¡Has perdido todas tus vidas! \nLa palabra era: " + secretWord.getWord());
     alert.showAndWait();
     clearGameState();
+    alert.setOnHidden(event -> SaveScore());
   }
 
+
+
+  private void ganarAlert() {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("¡Has ganado!");
+    alert.setHeaderText(null);
+    alert.setContentText("¡La palabra ha sido adivinada correctamente!");
+    alert.showAndWait();
+    clearGameState();
+    alert.setOnHidden(event -> SaveScore());
+  }
+
+  private void SaveScore() {
+    TextInputDialog dialog = new TextInputDialog();
+    dialog.setTitle("Guardar puntuación");
+    dialog.setHeaderText(null);
+    dialog.setContentText("Introduce tu nombre:");
+    Optional<String> result = dialog.showAndWait();
+    // Creamos el usuario y lo guardamos en la list
+    result.ifPresent(name -> usuarios.add(new Usuario(name, puntos.get())));
+  }
+
+
   private void clearGameState() {
-    ahorcadoImage = new Image(getClass().getResource("/hangman/4.png").toExternalForm());
-    ahorcadoImageView.setImage(ahorcadoImage);
     palabraAdivinar.set(".");
     secretWord.setWord(".");
     secretWord.setHiddenWord("...");
@@ -181,19 +212,12 @@ public class PartidaController implements Initializable {
     adivinarTextField.setDisable(true);
     letraButton.setDisable(true);
     resolverButton.setDisable(true);
-    imageCounter = 1;
-    secretWord.setVidas(9);
+    imageCounter = 0;
+    secretWord.setVidas(8);
     adivinadasListView.setVisible(false);
   }
 
-  private void ganarAlert() {
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setTitle("¡Has ganado!");
-    alert.setHeaderText(null);
-    alert.setContentText("¡La palabra ha sido adivinada correctamente!");
-    alert.showAndWait();
-    clearGameState();
-  }
+
 
   private void InvalidLetter() {
     Alert alert = new Alert(Alert.AlertType.WARNING);
